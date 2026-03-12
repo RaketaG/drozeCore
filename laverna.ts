@@ -1,5 +1,10 @@
+import https from 'https';
+import fs from 'node:fs';
 import { app } from "./src/app.js";
 
-app.listen(3000, () => {
+https.createServer({
+    key: fs.readFileSync("./.openssl/laverna.pem"),
+    cert: fs.readFileSync("./.openssl/laverna.crt"),
+}, app).listen(443, () => {
     console.log("Running");
 });
