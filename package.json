@@ -5,20 +5,27 @@
   "main": "laverna.js",
   "scripts": {
     "start": "node laverna.js",
-    "dev": "nodemon laverna.js"
+    "dev": "tsx watch laverna.ts",
+    "db-init": "tsx src/config/db-init.ts",
+    "devjs": "nodemon laverna.js"
   },
   "keywords": [],
   "author": "GG",
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
     "pg": "^8.20.0",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.4.0",
+    "@types/pg": "^8.18.0",
     "nodemon": "^3.1.14",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"

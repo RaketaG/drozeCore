@@ -9,6 +9,7 @@ export const dbConnection = async () => {
     try {
         await pool.connect();
         console.log("Connected to db.");
+        
     } catch (error) {
         console.log(`Connection failed: ${error}`);
         process.exit(1);
