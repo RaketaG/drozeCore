@@ -4,7 +4,7 @@
   "description": "",
   "main": "laverna.js",
   "scripts": {
-    "start": "node laverna.js",
+    "start": "tsc && node dist/laverna.js",
     "dev": "tsx watch laverna.ts",
     "db-init": "tsx src/config/db-init.ts",
     "devjs": "nodemon laverna.js"
