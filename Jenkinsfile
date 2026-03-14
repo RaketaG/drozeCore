@@ -5,11 +5,6 @@ pipeline {
         githubPush()
     }
 
-    environment {
-        DB_URL = credentials('DB_URL')
-        JWT_SECRET = credentials('JWT_SECRET')
-    }
-
     stages {
         stage('Checkout') {
             steps {
