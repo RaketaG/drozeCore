@@ -4,4 +4,4 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 EXPOSE 443
-CMD npm run db_init && npm run start
+CMD npm start
