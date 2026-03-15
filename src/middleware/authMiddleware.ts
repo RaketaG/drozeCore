@@ -1,17 +1,17 @@
 import type { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { type JwtPayload } from 'jsonwebtoken';
 
-export const auth = async (res: Request, req: Response, next: NextFunction) => {
-    const token = res.header('Authorization')?.split(' ')[1];
+export const auth = async (req: Request, res: Response, next: NextFunction) => {
+    const token = req.header('Authorization')?.split(' ')[1];
 
-    if (!token) return req.status(401).json({ error: "Access denied." })
+    if (!token) return res.status(401).json({ error: "Access denied." })
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET!)
-        res.user = decoded;
+        req.user = decoded as JwtPayload;
         next();
         
     } catch (error) {
-        req.status(401).json({ error: "Invalid token." })
+        res.status(401).json({ error: "Invalid token." })
     }
 };
