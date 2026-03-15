@@ -14,19 +14,24 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh '''
-                    docker stop laverna || true
-                    docker rm laverna   || true
-                    docker build -t laverna .
-                    docker run -d \
-                        --name laverna \
-                        --add-host=host.docker.internal:host-gateway \
-                        -v /home/giorguna_jr/laverna/openssl:/laverna/openssl \
-                        -p 443:443 \
-                        -e DB_URL="$DB_URL" \
-                        -e JWT_SECRET="$JWT_SECRET" \
-                        laverna
-                '''
+                withCredentials([
+                    string(credentialsId: 'DB_URL', variable: 'DB_URL'),
+                    string(credentialsId: 'JWT_SECRET', variable: 'JWT_SECRET')
+                ]) {
+                    sh '''  
+                        docker stop laverna || true
+                        docker rm laverna   || true
+                        docker build -t laverna .
+                        docker run -d \
+                            --name laverna \
+                            --add-host=host.docker.internal:host-gateway \
+                            -v /home/giorguna_jr/laverna/openssl:/laverna/openssl \
+                            -p 443:443 \
+                            -e DB_URL="$DB_URL" \
+                            -e JWT_SECRET="$JWT_SECRET" \
+                            laverna
+                    '''
+                }
             }
         }
     }
