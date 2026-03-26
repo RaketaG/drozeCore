@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
@@ -35,8 +34,8 @@ export class User {
     async addUser() {
         try {
             await pool.query(
-                `INSERT INTO public.restorators
-                (id, username, email, phone, password, role, fullname)
+                `INSERT INTO "public"."restorators"
+                ("id", "username", "email", "phone", "password", "role", "fullName")
                 VALUES ($1, $2, $3, $4, $5, $6, $7)`,
                 [this.id, this.username, this.email,
                 this.phone, this.password, this.role, this.fullName]
@@ -50,7 +49,7 @@ export class User {
     static async login(username: string, password: string) {
         try {
             const queryResult = await pool.query(
-                `SELECT password, id, role FROM public.restorators
+                `SELECT "password", "id", "role" FROM "public"."restorators"
                 WHERE username = $1`,
                 [username]
             );
@@ -64,12 +63,26 @@ export class User {
             const isMatch = await bcrypt.compare(password, userPassword)
             if (!isMatch) throw new Error("User not found.");
 
-            const token = jwt.sign(
+            const accessToken = jwt.sign(
                 { userId: userId, userRole: userRole },
-                process.env.JWT_SECRET!, { expiresIn: "1h" }
+                process.env.JWT_ACCESS_SECRET!, { expiresIn: "15m" }
             );
 
-            return token;
+            const refreshTokenId = uuidv4();
+
+            const refreshToken = jwt.sign(
+                { refreshTokenId: refreshTokenId, userId: userId, userRole: userRole },
+                process.env.JWT_REFRESH_SECRET!, { expiresIn: "24h" }
+            );
+
+            await pool.query(
+                `INSERT INTO "public"."refreshTokens"
+                ("id", "restoratorId", "refreshToken")
+                VALUES ($1, $2, $3)`,
+                [refreshTokenId, userId, bcrypt.hashSync(refreshToken, 10)]
+            );
+
+            return { accessToken, refreshToken };
         } catch (error) {
             throw error;
         }

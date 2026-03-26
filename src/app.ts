@@ -2,6 +2,10 @@ import express from 'express';
 import { User } from './user.js';
 import { auth } from './middleware/authMiddleware.js';
 import { Venue } from './venue.js';
+import cookieParser from 'cookie-parser';
+import jwt, { type JwtPayload } from 'jsonwebtoken';
+import { pool } from './config/db.js';
+import bcrypt from "bcryptjs";
 
 export const app = express();
 
@@ -24,11 +28,45 @@ app.post("/login", express.json(), async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        const token = await User.login(username, password);
-        res.json({ token });
+        const tokens = await User.login(username, password);
+        res.cookie(
+            "jwtRefresh",
+            tokens.refreshToken,
+            {
+                httpOnly: true,
+                maxAge: 2 * 60 * 60 * 1000
+            }
+        );
+        res.json({ accessToken: tokens.accessToken });
 
     } catch (error) {
         res.status(404).json({ error: (error as Error).message });
+    }
+});
+
+app.post("/refresh", cookieParser(), express.json(), async (req, res) => {
+    try {
+        const cookies = req.cookies;
+        if (!cookies.jwtRefresh) throw new Error("Unauthorized");
+
+        const decoded = jwt.verify(cookies.jwtRefresh, process.env.JWT_REFRESH_SECRET!) as JwtPayload;
+
+        const queryResponse = await pool.query(`
+            SELECT "refreshToken" FROM "public"."refreshTokens"
+            WHERE "restoratorId"='$1'
+        `, [decoded.refreshTokenId]);
+
+        const isMatch = await bcrypt.compare(cookies.jwtRefresh, queryResponse.rows[0].refreshToken)
+        if (!isMatch) throw new Error("User not found.");
+
+        const accessToken = jwt.sign(
+            { userId: decoded.userId, userRole: decoded.userRole },
+            process.env.JWT_ACCESS_SECRET!, { expiresIn: "1h" }
+        );
+
+        res.json({ accessToken });
+    } catch (error) {
+        res.status(401).json({ "error": error });
     }
 });
 

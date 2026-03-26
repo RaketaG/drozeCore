@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import https from 'https';
 import fs from 'node:fs';
 import { app } from "./src/app.js";
