@@ -1,5 +1,5 @@
 FROM node:24.14.0
-WORKDIR /laverna
+WORKDIR /drozeCore
 COPY package*.json ./
 RUN npm install
 COPY . .

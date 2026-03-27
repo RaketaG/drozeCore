@@ -1,13 +1,13 @@
 {
-  "name": "laverna",
+  "name": "drozeCore",
   "version": "1.0.0",
   "description": "",
-  "main": "laverna.js",
+  "main": "drozeCore.js",
   "scripts": {
-    "start": "tsc && node dist/src/config/db-init.js && node dist/laverna.js",
-    "dev": "tsx watch laverna.ts",
+    "start": "tsc && node dist/src/config/db-init.js && node dist/drozeCore.js",
+    "dev": "tsx watch drozeCore.ts",
     "db-init": "tsx src/config/db-init.ts",
-    "devjs": "nodemon laverna.js"
+    "devjs": "nodemon drozeCore.js"
   },
   "keywords": [],
   "author": "GG",

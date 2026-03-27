@@ -1,9 +1,11 @@
+import 'dotenv/config';
 import { pool } from "./db.js";
 
 const initializeDB = async () => {
     try {
+        
         await pool.query(`
-            CREATE TABLE IF NOT EXISTS "restorators" (
+            CREATE TABLE IF NOT EXISTS "users" (
                 "id" VARCHAR(36) NOT NULL PRIMARY KEY,
                 "username" TEXT UNIQUE NOT NULL,
                 "email" TEXT UNIQUE NOT NULL,
@@ -17,7 +19,7 @@ const initializeDB = async () => {
         await pool.query(`
             CREATE TABLE IF NOT EXISTS "refreshTokens" (
                 "id" VARCHAR(36) NOT NULL PRIMARY KEY,
-                "restoratorId" VARCHAR(36) NOT NULL REFERENCES "restorators"("id") ON DELETE CASCADE,
+                "userId" VARCHAR(36) NOT NULL REFERENCES "users"("id") ON DELETE CASCADE,
                 "refreshToken" TEXT UNIQUE NOT NULL
             )
         `);
@@ -25,7 +27,7 @@ const initializeDB = async () => {
         await pool.query(`
             CREATE TABLE IF NOT EXISTS "venues" (
                 "id" VARCHAR(36) NOT NULL PRIMARY KEY,
-                "restoratorId" VARCHAR(36) NOT NULL REFERENCES "restorators"("id") ON DELETE RESTRICT,
+                "userId" VARCHAR(36) NOT NULL REFERENCES "users"("id") ON DELETE RESTRICT,
                 "name" TEXT NOT NULL,
                 "address" TEXT UNIQUE NOT NULL,
                 "email" TEXT NOT NULL,

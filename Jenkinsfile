@@ -19,17 +19,17 @@ pipeline {
                     string(credentialsId: 'JWT_SECRET', variable: 'JWT_SECRET')
                 ]) {
                     sh '''  
-                        docker stop laverna || true
-                        docker rm laverna   || true
-                        docker build -t laverna .
+                        docker stop drozeCore || true
+                        docker rm drozeCore   || true
+                        docker build -t drozeCore .
                         docker run -d \
-                            --name laverna \
+                            --name drozeCore \
                             --add-host=host.docker.internal:host-gateway \
-                            -v /opt/laverna/openssl:/laverna/openssl \
+                            -v /opt/laverna/openssl:/drozeCore/openssl \
                             -p 443:443 \
                             -e DB_URL="$DB_URL" \
                             -e JWT_SECRET="$JWT_SECRET" \
-                            laverna
+                            drozeCore
                     '''
                 }
             }
