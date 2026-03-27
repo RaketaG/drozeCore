@@ -1,11 +1,11 @@
 import express from 'express';
-import { auth } from '../middleware/authMiddleware.js';
-import { Venue } from '../venue.js';
+import { auth } from './middleware/authMiddleware.js';
+import { Venue } from './entities/venue.js';
 import cookieParser from 'cookie-parser';
-import { registrationController } from "../controllers/registration-controller.js";
-import { loginController } from "../controllers/login-controller.js";
-import { refreshController } from "../controllers/refresh-controller.js";
-import { logoutController } from "../controllers/logout-controller.js";
+import { registrationController } from "./controllers/registration-controller.js";
+import { loginController } from "./controllers/login-controller.js";
+import { refreshController } from "./controllers/refresh-controller.js";
+import { logoutController } from "./controllers/logout-controller.js";
 
 export const app = express();
 

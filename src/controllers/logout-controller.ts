@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { logoutUser, refreshUser } from "../services/user-services.js";
+import { logoutUser } from "../services/user-services.js";
 
 export const logoutController = async (
     req: Request, res: Response
