@@ -15,6 +15,15 @@ type UserType = {
     fullName: string;
 }
 
+type UserPayloadType = {
+    userId: string;
+    username: string;
+    email: string;
+    phone: string;
+    userRole: "admin" | "restorator" | "user";
+    fullName: string;
+}
+
 export const addUser = async (
     { username, email, phone, password, role, fullName }: UserType
 ) => {
@@ -32,24 +41,24 @@ export const addUser = async (
 };
 
 const tokenGenerator = async (
-    userId: string, userRole: string
+    userPayload: UserPayloadType
 ) => {
     try {
         const accessToken = jwt.sign(
-            { userId: userId, userRole: userRole },
+            userPayload,
             process.env.JWT_ACCESS_SECRET!, { expiresIn: "1h" }
         );
 
         const refreshTokenId = uuidv4();
 
         const refreshToken = jwt.sign(
-            { refreshTokenId: refreshTokenId, userId: userId, userRole: userRole },
+            { refreshTokenId: refreshTokenId, ...userPayload },
             process.env.JWT_REFRESH_SECRET!, { expiresIn: "24h" }
         );
 
         const refreshTokenHash = bcrypt.hashSync(refreshToken, 10);
 
-        await insertIntoRefreshTokens(refreshTokenId, userId, refreshTokenHash);
+        await insertIntoRefreshTokens(refreshTokenId, userPayload.userId, refreshTokenHash);
 
         return {
             accessToken,
@@ -65,12 +74,21 @@ export const loginUser = async (
     username: string, password: string
 ) => {
     try {
-        const { userPassword, userId, userRole } = await selectFromUsers(username);
+        const {
+            userId,
+            email,
+            phone,
+            password: userPassword,
+            userRole,
+            fullName
+        } = await selectFromUsers(username);
 
         const isMatch = await bcrypt.compare(password, userPassword)
         if (!isMatch) throw new Error("User not found.");
 
-        const returnObject = await tokenGenerator(userId, userRole);
+        const returnObject = await tokenGenerator({
+            userId, username, email, phone, userRole, fullName
+        });
 
         return returnObject;
 
@@ -83,19 +101,17 @@ export const logoutUser = async (
     refreshToken: string
 ) => {
     try {
-        const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!) as JwtPayload;
+        const { iat, exp, refreshTokenId, ...userPayload } =
+            jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!) as JwtPayload;
 
-        const queryResponse = await selectFromRefreshTokens(decoded.refreshTokenId);
+        const queryResponse = await selectFromRefreshTokens(refreshTokenId);
 
         const isMatch = await bcrypt.compare(refreshToken, queryResponse);
         if (!isMatch) throw new Error("User not found.");
 
-        await removeFromRefreshTokens(decoded.refreshTokenId);
+        await removeFromRefreshTokens(refreshTokenId);
 
-        return {
-            userId: decoded.userId,
-            userRole: decoded.userRole
-        };
+        return userPayload;
 
     } catch (error) {
         throw error;
@@ -106,8 +122,8 @@ export const refreshUser = async (
     refreshToken: string
 ) => {
     try {
-        const { userId, userRole } = await logoutUser(refreshToken);
-        const returnObject = await tokenGenerator(userId, userRole);
+        const userPayload = await logoutUser(refreshToken);
+        const returnObject = await tokenGenerator(userPayload);
 
         return returnObject;
 

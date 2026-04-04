@@ -33,21 +33,27 @@ export const selectFromUsers = async (
 
     try {
         const queryResult = await pool.query(
-            `SELECT "password", "id", "role" FROM "public"."users"
+            `SELECT * FROM "public"."users"
             WHERE "username" = $1`,
             [username]
         );
 
         if (!queryResult.rowCount) throw new Error("User not found.");
 
-        const userPassword = queryResult.rows[0].password;
         const userId = queryResult.rows[0].id;
+        const email = queryResult.rows[0].email;
+        const phone = queryResult.rows[0].phone;
+        const password = queryResult.rows[0].password;
         const userRole = queryResult.rows[0].role;
+        const fullName = queryResult.rows[0].fullName;
 
         return {
-            userPassword,
             userId,
+            email,
+            phone,
+            password,
             userRole,
+            fullName
         };
 
     } catch (error) {

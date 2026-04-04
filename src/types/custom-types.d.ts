@@ -5,6 +5,10 @@ declare module 'jsonwebtoken' {
     userId: string;
     refreshTokenId: string;
     userRole: "admin" | "restorator" | "user";
+    username: string;
+    email: string;
+    phone: string;
+    fullName: string;
   }
 }
 
