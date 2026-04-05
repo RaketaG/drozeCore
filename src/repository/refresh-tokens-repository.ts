@@ -17,6 +17,20 @@ export const insertIntoRefreshTokens = async (
     }
 };
 
+export const selectAllRefreshTokens = async () => {
+
+    try {
+        const queryResponse = await pool.query(
+            `SELECT "refreshToken", "id" FROM "public"."refreshTokens"`
+        );
+
+        return queryResponse.rows;
+
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const selectFromRefreshTokens = async (
     refreshTokenId: string
 ) => {
@@ -43,6 +57,20 @@ export const removeFromRefreshTokens = async (
             `DELETE FROM "public"."refreshTokens"
             WHERE "id" = $1`,
             [refreshTokenId]
+        );
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const removeManyFromRefreshTokens = async (
+    refreshTokenIds: string[]
+) => {
+    try {
+        await pool.query(
+            `DELETE FROM "public"."refreshTokens"
+            WHERE "id" = ANY($1)`,
+            [refreshTokenIds]
         );
     } catch (error) {
         throw error;

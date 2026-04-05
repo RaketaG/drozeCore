@@ -46,7 +46,7 @@ const tokenGenerator = async (
     try {
         const accessToken = jwt.sign(
             userPayload,
-            process.env.JWT_ACCESS_SECRET!, { expiresIn: "1h" }
+            process.env.JWT_ACCESS_SECRET!, { expiresIn: "15m" }
         );
 
         const refreshTokenId = uuidv4();
