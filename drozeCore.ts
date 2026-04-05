@@ -1,11 +1,6 @@
 import 'dotenv/config';
-import https from 'https';
-import fs from 'node:fs';
 import { app } from "./src/app.js";
 
-https.createServer({
-    key: fs.readFileSync("./openssl/drozeCore.pem"),
-    cert: fs.readFileSync("./openssl/drozeCore.crt"),
-}, app).listen(443, () => {
+app.listen(3000, () => {
     console.log("Running");
 });

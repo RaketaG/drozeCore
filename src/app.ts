@@ -13,16 +13,16 @@ import { changeVenueDetailsController } from "./controllers/change-venue-details
 
 export const app = express();
 
-app.post("/register", express.json(), registrationController);
-app.post("/login", express.json(), loginController);
-app.post("/refresh", cookieParser(), refreshController);
-app.post("/logout", cookieParser(), logoutController);
+app.post("/api/register", express.json(), registrationController);
+app.post("/api/login", express.json(), loginController);
+app.post("/api/refresh", cookieParser(), refreshController);
+app.post("/api/logout", cookieParser(), logoutController);
 
-app.post("/addVenue", auth, express.json(), addVenueController);
-app.put("/changeVenueDetails", auth, express.json(), changeVenueDetailsController);
-app.delete("/deleteVenue/:id", auth, deleteVenueController);
-app.get("/listVenues", auth, listVenuesController);
-app.get("/venueDetails", auth, venueDetailsController);
+app.post("/api/addVenue", auth, express.json(), addVenueController);
+app.put("/api/changeVenueDetails", auth, express.json(), changeVenueDetailsController);
+app.delete("/api/deleteVenue/:id", auth, deleteVenueController);
+app.get("/api/listVenues", auth, listVenuesController);
+app.get("/api/venueDetails", auth, venueDetailsController);
 
 app.use((req, res) => {
     res.status(500).json({ error: "Something went wrong" });
