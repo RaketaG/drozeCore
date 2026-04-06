@@ -1,13 +1,13 @@
 import { pool } from "../config/db.js";
 
 type VenueType = {
-    id: string,
-    userId: string,
-    name: string,
-    address: string,
-    email: string,
-    phone: string
-}
+    id: string;
+    userId: string;
+    name: string;
+    address: string;
+    email: string;
+    phone: string;
+};
 
 export const insertIntoVenues = async (
     { id, userId, name, address, email, phone }: VenueType

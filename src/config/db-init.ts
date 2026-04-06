@@ -3,7 +3,7 @@ import { pool } from "./db.js";
 
 const initializeDB = async () => {
     try {
-        
+
         await pool.query(`
             CREATE TABLE IF NOT EXISTS "users" (
                 "id" VARCHAR(36) NOT NULL PRIMARY KEY,
@@ -32,6 +32,26 @@ const initializeDB = async () => {
                 "address" TEXT UNIQUE NOT NULL,
                 "email" TEXT NOT NULL,
                 "phone" TEXT NOT NULL
+            )
+        `);
+
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS "menuCategories" (
+                "id" VARCHAR(36) NOT NULL PRIMARY KEY,
+                "venueId" VARCHAR(36) NOT NULL REFERENCES "venues"("id") ON DELETE CASCADE,
+                "category" TEXT NOT NULL
+            )
+        `);
+
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS "menuItems" (
+                "id" VARCHAR(36) NOT NULL PRIMARY KEY,
+                "categoryId" VARCHAR(36) NOT NULL REFERENCES "menuCategories"("id") ON DELETE CASCADE,
+                "venueId" VARCHAR(36) NOT NULL REFERENCES "venues"("id") ON DELETE CASCADE,
+                "itemName" TEXT NOT NULL,
+                "description" TEXT,
+                "itemPrice" DECIMAL(10, 2),
+                "isAvailable" BOOLEAN DEFAULT TRUE
             )
         `);
 

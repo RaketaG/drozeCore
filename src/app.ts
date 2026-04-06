@@ -10,6 +10,7 @@ import { deleteVenueController } from "./controllers/delete-venue-controller.js"
 import { listVenuesController } from "./controllers/list-venues-controller.js";
 import { venueDetailsController } from "./controllers/venue-details-controller.js";
 import { changeVenueDetailsController } from "./controllers/change-venue-details-controller.js";
+import { addMenuCategoryController, changeMenuCategoryDetailsController, deleteMenuCategoryController, listMenuCategoryController } from "./controllers/menu-category-controllers.js";
 
 export const app = express();
 
@@ -23,6 +24,11 @@ app.put("/api/changeVenueDetails", auth, express.json(), changeVenueDetailsContr
 app.delete("/api/deleteVenue/:id", auth, deleteVenueController);
 app.get("/api/listVenues", auth, listVenuesController);
 app.get("/api/venueDetails", auth, venueDetailsController);
+
+app.post("/api/addMenuCategory", auth, express.json(), addMenuCategoryController);
+app.put("/api/changeMenuCategoryDetails", auth, express.json(), changeMenuCategoryDetailsController);
+app.delete("/api/deleteMenuCategory/:id", auth, deleteMenuCategoryController);
+app.get("/api/listMenuCategories", auth, listMenuCategoryController);
 
 app.use((req, res) => {
     res.status(500).json({ error: "Something went wrong" });
