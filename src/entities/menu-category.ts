@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { selectSpecificFromMenuCategories, updateIntoMenuCategories } from "../repository/menus-repository.js";
+import { selectSpecificFromMenuCategories, updateIntoMenuCategories } from "../repository/menu-categories-repository.js";
 
 export type MenuCategoryType = {
     id?: string;
@@ -18,9 +18,9 @@ export class MenuCategory {
         this.category = category;
     }
 
-    static async menuCategoryDetails(id: string, venueId: string) {
+    static async menuCategoryDetails(id: string) {
         try {
-            const detailsObject = await selectSpecificFromMenuCategories(id, venueId);
+            const detailsObject = await selectSpecificFromMenuCategories(id);
             return detailsObject.rows[0];
 
         } catch (error) {

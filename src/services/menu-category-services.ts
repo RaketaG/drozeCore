@@ -1,5 +1,5 @@
-import { MenuCategory } from "../entities/menu-categories.js";
-import { deleteFromMenuCategories, insertIntoMenuCategories, selectFromMenuCategories, type MenuCategoryType } from "../repository/menus-repository.js";
+import { MenuCategory } from "../entities/menu-category.js";
+import { deleteFromMenuCategories, insertIntoMenuCategories, selectFromMenuCategories, type MenuCategoryType } from "../repository/menu-categories-repository.js";
 
 export const addMenuCategory = async (
     { venueId, category }: MenuCategoryType
@@ -45,9 +45,9 @@ export const listMenuCategories = async (
 
 export const changeMenuCategoryDetails = async (
     { id, venueId, category }:
-        { id: string, venueId: string, category?: string }
+        { id: string, venueId?: string, category?: string }
 ) => {
-    const prevDetails = await MenuCategory.menuCategoryDetails(id, venueId);
+    const prevDetails = await MenuCategory.menuCategoryDetails(id);
     const menuCategory = new MenuCategory(prevDetails);
     try {
         await menuCategory.changeDetails(venueId, category);

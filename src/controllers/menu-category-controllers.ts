@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
-import { addMenuCategory, changeMenuCategoryDetails, deleteMenuCategory, listMenuCategories } from "../services/menu-services.js";
-import type { MenuCategoryType } from "../repository/menus-repository.js";
+import { addMenuCategory, changeMenuCategoryDetails, deleteMenuCategory, listMenuCategories } from "../services/menu-category-services.js";
+import type { MenuCategoryType } from "../repository/menu-categories-repository.js";
 
 export const addMenuCategoryController = async (
     req: Request<{}, {}, MenuCategoryType>, res: Response

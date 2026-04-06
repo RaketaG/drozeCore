@@ -39,7 +39,7 @@ const initializeDB = async () => {
             CREATE TABLE IF NOT EXISTS "menuCategories" (
                 "id" VARCHAR(36) NOT NULL PRIMARY KEY,
                 "venueId" VARCHAR(36) NOT NULL REFERENCES "venues"("id") ON DELETE CASCADE,
-                "category" TEXT NOT NULL
+                "category" TEXT UNIQUE NOT NULL
             )
         `);
 
@@ -48,7 +48,7 @@ const initializeDB = async () => {
                 "id" VARCHAR(36) NOT NULL PRIMARY KEY,
                 "categoryId" VARCHAR(36) NOT NULL REFERENCES "menuCategories"("id") ON DELETE CASCADE,
                 "venueId" VARCHAR(36) NOT NULL REFERENCES "venues"("id") ON DELETE CASCADE,
-                "itemName" TEXT NOT NULL,
+                "itemName" TEXT UNIQUE NOT NULL,
                 "description" TEXT,
                 "itemPrice" DECIMAL(10, 2),
                 "isAvailable" BOOLEAN DEFAULT TRUE

@@ -4,7 +4,7 @@ export type MenuCategoryType = {
     id: string;
     venueId: string;
     category: string;
-}
+};
 
 export const insertIntoMenuCategories = async (
     { id, venueId, category }: MenuCategoryType
@@ -71,13 +71,13 @@ export const selectFromMenuCategories = async (
 
 
 export const selectSpecificFromMenuCategories = async (
-    id: string, venueId: string
+    id: string
 ) => {
     try {
         const queryResponse = await pool.query(
             `SELECT * FROM "public"."menuCategories"
-            WHERE "venueId" = $1 and "id" = $2`,
-            [venueId, id]
+            WHERE "id" = $1`,
+            [id]
         );
         return queryResponse;
 

@@ -11,6 +11,7 @@ import { listVenuesController } from "./controllers/list-venues-controller.js";
 import { venueDetailsController } from "./controllers/venue-details-controller.js";
 import { changeVenueDetailsController } from "./controllers/change-venue-details-controller.js";
 import { addMenuCategoryController, changeMenuCategoryDetailsController, deleteMenuCategoryController, listMenuCategoryController } from "./controllers/menu-category-controllers.js";
+import { addMenuItemController, changeMenuItemDetailsController, deleteMenuItemController, listCategoryMenuItemController, listMenuItemController } from "./controllers/menu-item-controller.js";
 
 export const app = express();
 
@@ -29,6 +30,12 @@ app.post("/api/addMenuCategory", auth, express.json(), addMenuCategoryController
 app.put("/api/changeMenuCategoryDetails", auth, express.json(), changeMenuCategoryDetailsController);
 app.delete("/api/deleteMenuCategory/:id", auth, deleteMenuCategoryController);
 app.get("/api/listMenuCategories", auth, listMenuCategoryController);
+
+app.post("/api/addMenuItem", auth, express.json(), addMenuItemController);
+app.put("/api/changeMenuItemDetails", auth, express.json(), changeMenuItemDetailsController);
+app.delete("/api/deleteMenuItem/:id", auth, deleteMenuItemController);
+app.get("/api/listMenuItems", auth, listMenuItemController);
+app.get("/api/listCategoryMenuItems", auth, listCategoryMenuItemController);
 
 app.use((req, res) => {
     res.status(500).json({ error: "Something went wrong" });
