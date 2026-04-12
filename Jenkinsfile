@@ -6,7 +6,7 @@ pipeline {
     }
     
     stages {
-        stage("Build") {
+        stage("Buildgit") {
             steps {
                 echo 'Bob is on the way'
             }
